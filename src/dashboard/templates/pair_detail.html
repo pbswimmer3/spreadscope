@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}SpreadScope — {{ asset }} {{ venue_pair }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <a href="/" class="back-link">← Back to Dashboard</a>
+    <h1>{{ asset }} — {{ venue_pair }}</h1>
+</div>
+
+<!-- Pair Summary -->
+<div class="summary-cards">
+    <div class="card summary-card">
+        <div class="card-label">Current Spread</div>
+        <div class="card-value" id="currentSpread">—</div>
+    </div>
+    <div class="card summary-card">
+        <div class="card-label">Real Price</div>
+        <div class="card-value" id="realPrice">—</div>
+    </div>
+    <div class="card summary-card">
+        <div class="card-label">Synthetic Price</div>
+        <div class="card-value" id="syntheticPrice">—</div>
+    </div>
+    <div class="card summary-card">
+        <div class="card-label">Funding Rate</div>
+        <div class="card-value" id="fundingRate">—</div>
+    </div>
+</div>
+
+<!-- Dual Price Chart -->
+<div class="card">
+    <div class="card-header">
+        <h2>Price Comparison</h2>
+        <div class="chart-controls">
+            <button class="btn btn-sm active" onclick="setTimeRange(1)">1H</button>
+            <button class="btn btn-sm" onclick="setTimeRange(6)">6H</button>
+            <button class="btn btn-sm" onclick="setTimeRange(24)">24H</button>
+            <button class="btn btn-sm" onclick="setTimeRange(168)">7D</button>
+        </div>
+    </div>
+    <div class="chart-container" id="priceChart" style="height: 350px;"></div>
+</div>
+
+<!-- Spread Chart -->
+<div class="card">
+    <div class="card-header">
+        <h2>Spread History</h2>
+    </div>
+    <div class="chart-container" id="spreadChart" style="height: 250px;"></div>
+</div>
+
+<!-- Opportunity History -->
+<div class="card">
+    <div class="card-header">
+        <h2>Opportunity Events</h2>
+    </div>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Opened</th>
+                    <th>Closed</th>
+                    <th>Duration</th>
+                    <th>Entry</th>
+                    <th>Peak</th>
+                    <th>Avg</th>
+                    <th>Exit</th>
+                </tr>
+            </thead>
+            <tbody id="pairOpportunitiesBody">
+                <tr>
+                    <td colspan="7" class="empty-state">No opportunities recorded for this pair</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const PAIR_ASSET = '{{ asset }}';
+const PAIR_VENUE = '{{ venue_pair }}';
+
+document.addEventListener('DOMContentLoaded', function() {
+    initPairDetail(PAIR_ASSET, PAIR_VENUE);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,92 @@
+# SpreadScope Configuration Template
+# Copy to config.yaml and fill in your values
+
+database:
+  host: localhost
+  port: 5432
+  name: spreadscope_db
+  user: spreadscope
+  password: CHANGE_ME  # Set a secure password
+
+venues:
+  polygon:
+    api_key: CHANGE_ME  # Sign up at https://polygon.io (free tier available)
+    base_url: https://api.polygon.io
+    polling_interval: 60  # Free tier: 5 calls/min max
+    enabled: false  # Optional — disable if no API key
+
+  coinbase_spot:
+    base_url: https://api.coinbase.com
+    polling_interval: 30
+    enabled: true
+
+  coinbase_perps:
+    base_url: https://api.coinbase.com
+    polling_interval: 30
+    enabled: false  # Requires auth — disabled by default
+
+  hyperliquid:
+    base_url: https://api.hyperliquid.xyz
+    polling_interval: 15
+    enabled: true
+
+  synthetix:
+    base_url: https://hermes.pyth.network
+    polling_interval: 30
+    enabled: true
+
+  dydx:
+    base_url: https://indexer.dydx.trade/v4
+    polling_interval: 30
+    enabled: true
+
+# Assets to track
+assets:
+  - BTC
+  - ETH
+
+# Spread calculation settings (still used for spread monitoring)
+thresholds:
+  default_pct: 0.05  # Flag spreads above 0.05% (realistic for liquid crypto)
+  staleness_max_seconds: 120  # Ignore prices older than 2 minutes
+
+# =============================================================================
+# Funding Rate Carry Settings
+# =============================================================================
+portfolio:
+  capital_usd: 5000        # Total portfolio capital (adjust this)
+  max_position_pct: 50     # Max % of capital in any single carry position
+  min_position_usd: 100    # Minimum position size worth taking
+  fee_per_trade_pct: 0.06  # Taker fee per leg (conservative estimate)
+
+carry:
+  # Minimum annualized funding rate to consider a carry trade (after fees)
+  min_annualized_rate_pct: 10.0  # Only signal when APY > 10%
+  # Minimum raw 8h funding rate to consider
+  min_funding_rate_pct: 0.01     # 0.01% per 8h = ~13.7% annualized
+  # How many consecutive readings above threshold before signaling
+  confirmation_periods: 3
+  # Maximum acceptable spread between spot and perp at entry
+  max_entry_spread_pct: 0.15
+  # Funding rate below which we signal exit
+  exit_funding_rate_pct: 0.005   # 0.005% per 8h = ~6.8% annualized
+  # Venues to use as spot leg
+  spot_venues:
+    - coinbase_spot
+  # Venues to use as perp leg (where funding is collected)
+  perp_venues:
+    - hyperliquid_perps
+    - dydx
+
+# Dashboard settings
+dashboard:
+  host: 0.0.0.0
+  port: 8050
+  debug: false
+
+# Logging
+logging:
+  level: INFO
+  file: /opt/spreadscope/logs/spreadscope.log
+  max_size_mb: 100
+  backup_count: 5

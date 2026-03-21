@@ -1,0 +1,1 @@
+# SpreadScope calculator package

@@ -1,0 +1,26 @@
+[Unit]
+Description=SpreadScope Web Dashboard
+After=postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=spreadscope
+WorkingDirectory=/opt/spreadscope
+ExecStart=/opt/spreadscope/venv/bin/python run_dashboard.py --config /opt/spreadscope/config/config.yaml --port 8050
+Restart=always
+RestartSec=10
+Environment=PYTHONUNBUFFERED=1
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=spreadscope-dashboard
+
+# Security
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/spreadscope/logs
+
+[Install]
+WantedBy=multi-user.target

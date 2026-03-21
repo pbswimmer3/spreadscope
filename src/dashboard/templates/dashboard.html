@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}SpreadScope — Funding Rate Monitor{% endblock %}
+
+{% block content %}
+<!-- Summary Cards -->
+<div class="summary-cards">
+    <div class="card summary-card">
+        <div class="card-label">Portfolio</div>
+        <div class="card-value" id="portfolioCapital">—</div>
+    </div>
+    <div class="card summary-card">
+        <div class="card-label">Active Signals</div>
+        <div class="card-value highlight" id="activeSignals">0</div>
+    </div>
+    <div class="card summary-card">
+        <div class="card-label">Best APY (BTC)</div>
+        <div class="card-value" id="bestApyBTC">—</div>
+    </div>
+    <div class="card summary-card">
+        <div class="card-label">Best APY (ETH)</div>
+        <div class="card-value" id="bestApyETH">—</div>
+    </div>
+</div>
+
+<!-- Database Status Banner -->
+<div class="alert alert-warning" id="dbWarning" style="display: none;">
+    Database not connected. Showing placeholder data.
+    <a href="#" onclick="location.reload()">Refresh</a>
+</div>
+
+<!-- Current Funding Rates -->
+<div class="card">
+    <div class="card-header">
+        <h2>Current Funding Rates</h2>
+        <span class="refresh-indicator" id="refreshIndicator"></span>
+    </div>
+    <div class="table-container">
+        <table class="data-table" id="fundingTable">
+            <thead>
+                <tr>
+                    <th>Asset</th>
+                    <th>Venue</th>
+                    <th>Funding Rate (8h)</th>
+                    <th>Annualized APY</th>
+                    <th>Mark Price</th>
+                    <th>Open Interest</th>
+                    <th>Age</th>
+                </tr>
+            </thead>
+            <tbody id="fundingTableBody">
+                <tr>
+                    <td colspan="7" class="empty-state">Loading funding rate data...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Active Carry Signals -->
+<div class="card">
+    <div class="card-header">
+        <h2>Active Carry Signals</h2>
+    </div>
+    <div class="table-container">
+        <table class="data-table" id="signalsTable">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Asset</th>
+                    <th>Perp Venue</th>
+                    <th>APY</th>
+                    <th>Position Size</th>
+                    <th>Expected $/day</th>
+                    <th>Fees</th>
+                    <th>Breakeven</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody id="signalsTableBody">
+                <tr>
+                    <td colspan="9" class="empty-state">No active signals</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Funding Rate Chart -->
+<div class="card">
+    <div class="card-header">
+        <h2>Funding Rate History</h2>
+        <div class="chart-controls">
+            <button class="btn btn-sm active" onclick="setChartAsset('BTC')" id="btnBTC">BTC</button>
+            <button class="btn btn-sm" onclick="setChartAsset('ETH')" id="btnETH">ETH</button>
+        </div>
+    </div>
+    <div class="chart-container" id="liveSpreadChart" style="height: 400px;"></div>
+</div>
+
+<!-- Current Spreads (secondary) -->
+<div class="card">
+    <div class="card-header">
+        <h2>Current Spreads</h2>
+    </div>
+    <div class="table-container">
+        <table class="data-table" id="spreadsTable">
+            <thead>
+                <tr>
+                    <th>Asset</th>
+                    <th>Spot Venue</th>
+                    <th>Perp Venue</th>
+                    <th>Spot Price</th>
+                    <th>Perp Price</th>
+                    <th>Spread %</th>
+                    <th>Age</th>
+                </tr>
+            </thead>
+            <tbody id="spreadsTableBody">
+                <tr>
+                    <td colspan="7" class="empty-state">Loading spread data...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    initDashboard();
+});
+</script>
+{% endblock %}

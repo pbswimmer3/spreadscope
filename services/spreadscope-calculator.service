@@ -1,0 +1,26 @@
+[Unit]
+Description=SpreadScope Spread Calculator
+After=postgresql.service spreadscope-ingestion.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=spreadscope
+WorkingDirectory=/opt/spreadscope
+ExecStart=/opt/spreadscope/venv/bin/python run_calculator.py --config /opt/spreadscope/config/config.yaml --interval 10
+Restart=always
+RestartSec=10
+Environment=PYTHONUNBUFFERED=1
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=spreadscope-calculator
+
+# Security
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/spreadscope/logs
+
+[Install]
+WantedBy=multi-user.target
