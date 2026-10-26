@@ -1,5 +1,7 @@
 # SpreadScope
 
+> **Status: disabled (2026-10-25).** The calculator, dashboard and ingestion services and their PostgreSQL database ran on a self-hosted VM that was shut down on 2026-05-11 and retired on 2026-10-25. The database is preserved in an offline backup of that VM. The code stays here for reference.
+
 A funding rate carry trade research tool that monitors perpetual futures funding rates, detects profitable carry opportunities, and stores bot-readable trading signals.
 
 **Research and signal generation only — does not execute trades.**
